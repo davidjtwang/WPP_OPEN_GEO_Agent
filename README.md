@@ -28,6 +28,6 @@ WPP OPEN self-build GEO Agent works
 
 結果：
 
-[簡易版]()
+[簡易版](https://davidjtwang.github.io/WPP_OPEN_GEO_Agent/work/AIMA-GEO_AIO-Analysis-Report-v1.html)
 
 [檢測項目表版本]()
