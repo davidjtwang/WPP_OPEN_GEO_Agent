@@ -12,7 +12,7 @@ WPP OPEN self-build GEO Agent works
 2026/08/06 測試
 
 提示詞：
-* 請協助診斷此網站的 GEO 表現：https://www.drwu.com/pages/skincare-what-is-morning-c-and-night-a-skincare?srsltid=AfmBOorQqJRorNZH33T2Y_YO-Nlgdyaq6Rq43wnco22ymgjOOe_RI5jA
+* 請協助診斷此網站的 GEO 表現：https://美妝網站
 * 請問你可以把檢測結果製作成一個可以互動的 html 檔嗎？
 * 蠻好的，可以請你把這報告呈現完整一點嗎？目前的內容保留，另外加上彙總檢測項目的評分表格。
 
