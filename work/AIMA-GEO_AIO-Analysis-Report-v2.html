@@ -1,0 +1,544 @@
+
+<!-- saved from url=(0014)about:internet -->
+<html lang="zh-TW"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIMA GEO/AIO Analysis Report</title>
+    <style>
+        :root {
+            --primary: #2C3E50;
+            --secondary: #3498DB;
+            --success: #2ECC71;
+            --warning: #F1C40F;
+            --danger: #E74C3C;
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text-main: #333333;
+            --text-muted: #7F8C8D;
+            --border-radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .url-box {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--secondary);
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 0.95rem;
+            word-break: break-all;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        /* Scorecard Styles */
+        .scorecard-container {
+            display: flex;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .score-visual {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(var(--success) 81.6%, #EDF2F7 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        .score-inner {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .score-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--success);
+            line-height: 1;
+        }
+
+        .score-max {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .score-details {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .score-details h2 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .score-details p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(46, 204, 113, 0.15);
+            color: #27AE60;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .table-container h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .score-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .score-table th, .score-table td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .score-table th {
+            background-color: #f8f9fa;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .score-table tr:hover td {
+            background-color: #fbfbfc;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            text-align: center;
+            min-width: 45px;
+        }
+
+        .score-high { background: rgba(46, 204, 113, 0.2); color: #27ae60; }
+        .score-med { background: rgba(52, 152, 219, 0.2); color: #2980b9; }
+        .score-low { background: rgba(241, 196, 15, 0.2); color: #d35400; }
+
+        /* Accordion Styles */
+        .accordion-wrapper {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid #EEEEEE;
+        }
+
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 20px 25px;
+            background: transparent;
+            border: none;
+            text-align: left;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            background: #F8F9FA;
+        }
+
+        .accordion-header .icon {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chevron {
+            transition: transform 0.3s ease;
+            color: var(--text-muted);
+        }
+
+        .accordion-header.active .chevron {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            background: #FAFAFA;
+        }
+
+        .accordion-inner {
+            padding: 20px 25px 30px;
+        }
+
+        /* List Styles */
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
+        .feature-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+
+        .list-success li::before {
+            content: '✓';
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--success);
+        }
+
+        .list-warning li::before {
+            content: '!';
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+        }
+
+        .list-action li::before {
+            content: '→';
+            background: rgba(52, 152, 219, 0.2);
+            color: var(--secondary);
+        }
+        
+        .tag {
+            display: inline-block;
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #eee;
+            margin-left: 10px;
+            color: var(--text-muted);
+            font-weight: normal;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="header">
+        <h1>AIMA GEO &amp; AIO Analysis Report</h1>
+        <p>Generative Engine Optimization &amp; AI Discoverability Assessment</p>
+        <div class="url-box">
+            🌐 Target: https://www.drwu.com/pages/skincare-what-is-morning-c-and-night-a-skincare
+        </div>
+    </header>
+
+    <!-- Scorecard Section -->
+    <div class="scorecard-container">
+        <div class="score-visual">
+            <div class="score-inner">
+                <span class="score-value" id="score-counter">81.6</span>
+                <span class="score-max">/ 100</span>
+            </div>
+        </div>
+        <div class="score-details">
+            <h2>整體準備度評分 (Readiness Score)</h2>
+            <p>該網頁展現了絕佳的大型語言模型 (LLM) 爬取與生成式搜尋能見度潛力。強大的語意結構非常有利於被 AI 引用，但仍缺乏關鍵的 E-E-A-T 信任訊號與結構化資料 (Schema) 標記。</p>
+            <span class="status-badge">體質優良 - 具備優化潛力</span>
+        </div>
+    </div>
+
+    <!-- NEW: Detailed Table Section -->
+    <div class="table-container">
+        <h2>AIMA 健檢詳細計分卡</h2>
+        <div class="table-wrapper">
+            <table class="score-table">
+                <thead>
+                    <tr>
+                        <th>檢測範圍</th>
+                        <th>檢測項目</th>
+                        <th>檢測細節與診斷結果</th>
+                        <th style="text-align: center;">分數</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="2"><strong>使用者體驗</strong></td>
+                        <td>網站效能</td>
+                        <td>文字佔比較高，排版有邏輯，大幅降低 LCP 負擔，爬蟲友善。</td>
+                        <td style="text-align: center;"><span class="score-badge score-med">75</span></td>
+                    </tr>
+                    <tr>
+                        <td>無障礙功能</td>
+                        <td>清晰的文字段落與目錄結構，機器閱讀與語音報讀器可及性佳。</td>
+                        <td style="text-align: center;"><span class="score-badge score-med">80</span></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2"><strong>網站技術</strong></td>
+                        <td>最佳做法</td>
+                        <td>HTTPS、多語系/幣值切換，行動裝置適應性佳。無 JS 封鎖。</td>
+                        <td style="text-align: center;"><span class="score-badge score-high">85</span></td>
+                    </tr>
+                    <tr>
+                        <td>SEO</td>
+                        <td>Meta Title 精準切中核心意圖，涵蓋長尾關鍵字與搜尋節點。</td>
+                        <td style="text-align: center;"><span class="score-badge score-high">85</span></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3"><strong>內容可解析性</strong></td>
+                        <td>頁面語意結構</td>
+                        <td>具備強大的 H1/H2/H3 邏輯階層，AI 最愛的「結構化敘事」。</td>
+                        <td style="text-align: center;"><span class="score-badge score-high">90</span></td>
+                    </tr>
+                    <tr>
+                        <td>結構化資料設計</td>
+                        <td>具備 Q&amp;A 與產品置入，但需確認原始碼實作 JSON-LD。</td>
+                        <td style="text-align: center;"><span class="score-badge score-med">75</span></td>
+                    </tr>
+                    <tr>
+                        <td>Schema 完整度</td>
+                        <td>具備基礎電商 Breadcrumb，需擴充 FAQPage Schema。</td>
+                        <td style="text-align: center;"><span class="score-badge score-med">75</span></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="5"><strong>知識圖譜整合性</strong></td>
+                        <td>核心實體一致性</td>
+                        <td>高實體密度（維他命C/A醇/DR.WU），助 AI 建立強關聯。</td>
+                        <td style="text-align: center;"><span class="score-badge score-high">85</span></td>
+                    </tr>
+                    <tr>
+                        <td>節點關係完整性</td>
+                        <td>成功將「資訊探索」與「產品購買」無縫連結。</td>
+                        <td style="text-align: center;"><span class="score-badge score-high">85</span></td>
+                    </tr>
+                    <tr>
+                        <td>EEAT 訊號完整性</td>
+                        <td>專業詞彙豐富。致命傷：缺乏「具名專家作者」與「更新日期」。</td>
+                        <td style="text-align: center;"><span class="score-badge score-low">70</span></td>
+                    </tr>
+                    <tr>
+                        <td>跨頁語意一致性</td>
+                        <td>深度契合皮膚科學，網域的語意權重表現極佳。</td>
+                        <td style="text-align: center;"><span class="score-badge score-high">90</span></td>
+                    </tr>
+                    <tr>
+                        <td>過度渲染評估</td>
+                        <td>純文字搭配圖文格式，機器可讀性高，無過度渲染隱藏風險。</td>
+                        <td style="text-align: center;"><span class="score-badge score-high">85</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Accordion Section -->
+    <div class="accordion-wrapper">
+        <!-- Strengths Section -->
+        <div class="accordion-item">
+            <button class="accordion-header">
+                <div class="icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2ECC71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    網頁優勢與強項
+                </div>
+                <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="accordion-content" style="">
+                <div class="accordion-inner">
+                    <ul class="feature-list list-success">
+                        <li><strong>優異的標題結構 (H1/H2/H3):</strong> 採用清晰且具邏輯性的語意階層。這大幅降低了 AI 爬蟲的運算負荷，使其能精準掌握「早C晚A」保養概念的脈絡。 <span class="tag">機器可讀性</span></li>
+                        <li><strong>高實體 (Entity) 密度:</strong> 文中頻繁且具上下文關聯地提及核心實體，如「維他命C」、「維他命A」、「A醇」及品牌「DR.WU」。此舉極大地強化了 AI 知識圖譜的對齊度。 <span class="tag">知識圖譜整合</span></li>
+                        <li><strong>知識教育型內容格式:</strong> 內容成功解答了使用者意圖導向的問題（如：「是什麼？」、「如何使用？」）。這種「解決方案導向」的內容，完美契合大型語言模型提供直接解答的偏好。 <span class="tag">意圖導向策略</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weaknesses Section -->
+        <div class="accordion-item">
+            <button class="accordion-header">
+                <div class="icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E74C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    劣勢與差距
+                </div>
+                <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="accordion-content">
+                <div class="accordion-inner">
+                    <ul class="feature-list list-warning">
+                        <li><strong>缺乏明確作者/專家資訊:</strong> 文章未具名真實的人類專家（如皮膚科醫師）。AI 模型對於 YMYL（影響金錢或生活健康）主題極度要求專家背書，缺乏此資訊將面臨扣分。 <span class="tag">E-E-A-T 權威與信任</span></li>
+                        <li><strong>缺少更新日期與時效性標記:</strong> 文章缺乏明確的發布與更新時間 (`dateModified`)。生成式引擎偏好最新的資訊，無法辨識時間戳記會降低 AI 對內容時效性的信任。 <span class="tag">內容時效性</span></li>
+                        <li><strong>未實作 FAQ 結構化資料:</strong> 儘管網頁中包含回答常見問題的豐富內容，但未在後台加入 JSON-LD `FAQPage` 標記。這導致錯失了讓 AI 在生成搜尋結果中直接抓取「零點擊 (Zero-click)」答案的機會。 <span class="tag">結構化資料 Schema</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations Section -->
+        <div class="accordion-item">
+            <button class="accordion-header">
+                <div class="icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3498DB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    具體 AIO 執行策略
+                </div>
+                <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="accordion-content">
+                <div class="accordion-inner">
+                    <ul class="feature-list list-action">
+                        <li><strong>建立專家檔案 (Expert Profiles):</strong> 加入作者區塊，詳細說明 DR.WU 皮膚科團隊或特定認證專家的資歷。並將此連結至獨立的作者介紹頁，以大幅強化 E-E-A-T 中的「專業度 (Expertise)」。</li>
+                        <li><strong>植入 FAQ 結構化標記:</strong> 將關於「早C晚A」最常見的使用者提問（如：「敏感肌能用嗎？」、「應該什麼時候擦？」）彙整為文章底部的專屬 Q&amp;A 區塊，並請工程團隊以 `FAQPage` JSON-LD 語法進行封裝。</li>
+                        <li><strong>新增中繼資料時間戳記:</strong> 確保內容管理系統 (CMS) 能在文章的結構化資料中輸出 `datePublished` 與 `dateModified`，讓 LLM 認知此保養建議為最新狀態。</li>
+                        <li><strong>引用與第三方驗證:</strong> 建議加上外部連結，引用具權威性之皮膚科文獻或關於維他命 A/C 功效的研究報告。LLM 極度信任且偏好引用了具公信力第三方科學來源的內容。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Accordion Logic
+    document.addEventListener("DOMContentLoaded", function() {
+        const headers = document.querySelectorAll(".accordion-header");
+        
+        headers.forEach(header => {
+            header.addEventListener("click", function() {
+                // Toggle current accordion
+                this.classList.toggle("active");
+                const content = this.nextElementSibling;
+                
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        });
+
+        // Score Animation Logic
+        const targetScore = 81.6;
+        const scoreElement = document.getElementById("score-counter");
+        let currentScore = 0;
+        const duration = 1500; // 1.5 seconds
+        const interval = 20;
+        const step = targetScore / (duration / interval);
+
+        const timer = setInterval(() => {
+            currentScore += step;
+            if (currentScore >= targetScore) {
+                currentScore = targetScore;
+                clearInterval(timer);
+            }
+            scoreElement.innerText = currentScore.toFixed(1);
+        }, interval);
+    });
+</script>
+
+
+
+
+
+</body></html>
